@@ -4,7 +4,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 import { FitTheme } from '../theme/FitTheme';
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel';
 
-export const LoginScreen: React.FC () => {
+export const LoginScreen: React.FC = () => {
     const vm = useLoginViewModel();
 
     return (
