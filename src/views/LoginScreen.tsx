@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Textinput, StyleSheet, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { FitTheme } from '../theme/FitTheme';
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel';
@@ -10,7 +10,7 @@ export const LoginScreen: React.FC () => {
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.container}>
         
-        <Text style={StyleSheet.title}>Bem-vindo ao +Fit</Text>
+        <Text style={styles.title}>Bem-vindo ao +Fit</Text>
 
         <TextInput
             placeholder='E-mail'
@@ -19,19 +19,19 @@ export const LoginScreen: React.FC () => {
             autoCapitalize='none'
             value={vm.email}
             onChangeText={vm.setEmail}
-            style={StyleSheet.input}
+            style={styles.input}
         />
 
-        <Textinput
+        <TextInput
             placeholder='Senha'
             placeholderTextColor={FitTheme.colors.textMuted}
             secureTextEntry
             value={vm.password}
-            onChangeText={vm.setpassword}
-            style={StyleSheet.input}
+            onChangeText={vm.setPassword}
+            style={styles.input}
         />
 
-        <PrimaryButton title{vm.loaging ? 'Entrando...' : 'Entrar'} onPress={vm.login} disabled={vm.loading} />
+        <PrimaryButton title={vm.loading ? 'Entrando...' : 'Entrar'} onPress={vm.login} disabled={vm.loading} />
         <View style={{ height: 12 }} />
         <PrimaryButton title='Cadastrar' onPress={vm.signup} disabled={vm.loading} />
 

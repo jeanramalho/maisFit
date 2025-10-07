@@ -193,4 +193,43 @@ create policy "Images: users manage own images" on public.images
 alter table public.plans enable row level security;
 create policy "Plans: users manage own plans" on public.plans
   for all
-  using (aut
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- model_downloads
+alter table public.model_downloads enable row level security;
+create policy "ModelDownloads: own models" on public.model_downloads
+  for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- 5) FUNÇÃO AUXILIAR (opcional): decrementar quota de forma atômica
+-- Essa função pode ser chamada pela função edge (RPC) ou por uma Supabase Function para diminuir quotas
+create or replace function public.consume_user_quota(p_user_id uuid, p_quota_key text, p_amount int)
+returns boolean as $$
+declare
+  v_remaining int;
+begin
+  loop
+    -- tenta bloquear a linha para leitura concorrente
+    select remaining into v_remaining from public.user_quotas
+      where user_id = p_user_id and quota_key = p_quota_key
+      for update;
+
+    if not found then
+      return false; -- quota não existe
+    end if;
+
+    if v_remaining < p_amount then
+      return false; -- sem saldo suficiente
+    end if;
+
+    -- decrementa
+    update public.user_quotas
+      set remaining = remaining - p_amount
+      where user_id = p_user_id and quota_key = p_quota_key;
+
+    return true;
+  end loop;
+end;
+$$ language plpgsql security definer;
