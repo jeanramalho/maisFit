@@ -3,9 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RootNavigator } from "./src/navigation";
-import { FitTheme } from "./src/theme/fitTheme";
+import { FitTheme } from "./src/theme/FitTheme";
 
-export defaul funcion App() {
+
+export default function App() {
 
   return (
     <SafeAreaProvider>
